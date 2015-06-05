@@ -77,7 +77,7 @@ def dfs(graph, start, goal):
 		vertex = stack.pop()
 		neighbors = getNeighbors(graph, vertex)
 		for next_node in neighbors:
-			if next_node not in visited:
+			if next_node not in visited and graph[next_node] != 'W':
 				visited.append(vertex)
 				stack.append(next_node)
 
