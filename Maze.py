@@ -47,14 +47,15 @@ def generateMaze():
 			if i == size - 2 and j == size - 2:
 				dungeon[(i,j)] = '*'
 
-			block = block + dungeon[(i,j)] + ' '
-
-		mazeStr.append(block)
-		block = ''
-
 	valid = dfs(dungeon, (1,1), (size-2, size-2))
 
 	if valid:
+		for i in xrange(size):
+			for j in xrange(size):
+				block = block + dungeon[(i,j)] + ' '
+			mazeStr.append(block)
+			block = ''
+
 		for i in mazeStr:
 			print i
 	else:
@@ -70,16 +71,27 @@ def getNeighbors(graph, node):
 				steps.append(next_node)
 	return steps
 
-
 def dfs(graph, start, goal):
 	visited, stack = [], [start]
+	path = []
 	while stack:
 		vertex = stack.pop()
+
+		if goal == vertex:
+			visited.append(vertex)
+			break
+
 		neighbors = getNeighbors(graph, vertex)
 		for next_node in neighbors:
 			if next_node not in visited and graph[next_node] != 'W':
 				visited.append(vertex)
 				stack.append(next_node)
+				if vertex != start:
+					path.append(vertex)
+
+	for i in path:
+		if i != start or i != goal:
+			graph[i] = "_"
 
 	if goal in visited:
 		return True
