@@ -10,11 +10,18 @@ def generateMaze():
     size = 20
     valid = False
 
+    room1 = random.randint(1, size - 4)
+    room2 = random.randint(1, size - 4)
+
     for i in xrange(size):
         if i == 0:
             horzWall = True
         elif i == size - 1:
             horzWall = True
+        elif i in range(room1, room1 + 2):
+            roomWall = True
+        elif i in range(room2, room2 + 2):
+            roomWall = True
         else:
             horzWall = False
 
@@ -23,10 +30,14 @@ def generateMaze():
                 vertWall = True
             elif j == size - 1:
                 vertWall = True
+            elif j in range(room1, room1 + 2):
+                roomWall = True
+            elif j in range(room2, room2 + 2):
+                roomWall = True
             else:
                 vertWall = False
 
-            if vertWall or horzWall:
+            if vertWall or horzWall or roomWall:
                 mustBeWall = True
             else:
                 mustBeWall = False
