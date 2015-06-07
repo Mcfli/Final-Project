@@ -9,6 +9,8 @@ def generateMaze():
     spriteType = 0
     size = 20
     valid = False
+    roomA = []
+    roomB = []
 
     room1 = random.randint(1, size - 4)
     room2 = random.randint(1, size - 4)
@@ -30,14 +32,10 @@ def generateMaze():
                 vertWall = True
             elif j == size - 1:
                 vertWall = True
-            elif j in range(room1, room1 + 2):
-                roomWall = True
-            elif j in range(room2, room2 + 2):
-                roomWall = True
             else:
                 vertWall = False
 
-            if vertWall or horzWall or roomWall:
+            if vertWall or horzWall:
                 mustBeWall = True
             else:
                 mustBeWall = False
@@ -54,13 +52,37 @@ def generateMaze():
             elif spriteType == 2:
                 dungeon[(i, j)] = 'D'
 
-            if i == 1 and j == 1:
-                dungeon[(i, j)] = '@'
+    for i in [-1, 0, 1]:
+    	for j in [-1, 0, 1]:
+    		roomA.append((room1 + i, room1 + j))
+    		roomB.append((room2 + i, room2 + j))
 
-            if i == size - 2 and j == size - 2:
-                dungeon[(i, j)] = '*'
+    doorAX = random.randint(-1,1)
+    doorAY = random.randint(-1,1)
+    doorBX = random.randint(-1,1)
+    doorBY = random.randint(-1,1)
 
-    valid = dfs(dungeon, (1, 1), (size - 2, size - 2))
+    doorPosA = (room1 + doorAX, room1 + doorAY)
+    doorPosB = (room2 + doorBX, room2 + doorBY)
+
+    for i in roomA:
+        if i == (room1, room1):
+            dungeon[i] = '@'
+        elif i == doorPosA:
+            dungeon[i] = 'D'
+        else:
+            dungeon[i] = 'W'
+
+    for j in roomB:
+        if j == (room2, room2):
+            dungeon[j] = '*'
+        elif j == doorPosB:
+            dungeon[j] = 'D'
+        else:
+            dungeon[j] = 'W'
+
+
+    valid = dfs(dungeon, (room1, room1), (room2, room2))
 
     if valid:
         for i in xrange(size):
@@ -105,7 +127,7 @@ def dfs(graph, start, goal):
                     path.append(vertex)
 
     for i in path:
-        if i != start or i != goal:
+        if i != start and i != goal:
             graph[i] = "_"
 
     if goal in visited:
