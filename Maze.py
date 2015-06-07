@@ -1,101 +1,106 @@
 import random
 
+
 def generateMaze():
-	dungeon = {}
-	mustBeWall = False
-	mazeStr = []
-	block = ''
-	spriteType = 0
-	size = 20
-	valid = False
-	for i in xrange(size):
-		if i == 0:
-			horzWall = True
-		elif i == size - 1:
-			horzWall = True
-		else:
-			horzWall = False
+    dungeon = {}
+    mustBeWall = False
+    mazeStr = []
+    block = ''
+    spriteType = 0
+    size = 20
+    valid = False
 
-		for j in xrange(size):
-			if j == 0:
-				vertWall = True
-			elif j == size - 1:
-				vertWall = True
-			else:
-				vertWall= False
+    for i in xrange(size):
+        if i == 0:
+            horzWall = True
+        elif i == size - 1:
+            horzWall = True
+        else:
+            horzWall = False
 
-			if vertWall or horzWall:
-				mustBeWall = True
-			else:
-				mustBeWall = False
+        for j in xrange(size):
+            if j == 0:
+                vertWall = True
+            elif j == size - 1:
+                vertWall = True
+            else:
+                vertWall = False
 
-			if mustBeWall:
-				spriteType = 0
-			else:
-				spriteType = random.randint(0,1)
+            if vertWall or horzWall:
+                mustBeWall = True
+            else:
+                mustBeWall = False
 
-			if spriteType == 0:
-				dungeon[(i,j)] = 'W'
-			elif spriteType == 1:
-				dungeon[(i,j)] = '.'
-			elif spriteType == 2:
-				dungeon[(i,j)] = 'D'
+            if mustBeWall:
+                spriteType = 0
+            else:
+                spriteType = random.randint(0, 1)
 
-			if i == 1 and j == 1:
-				dungeon[(i,j)] = '@'
+            if spriteType == 0:
+                dungeon[(i, j)] = 'W'
+            elif spriteType == 1:
+                dungeon[(i, j)] = '.'
+            elif spriteType == 2:
+                dungeon[(i, j)] = 'D'
 
-			if i == size - 2 and j == size - 2:
-				dungeon[(i,j)] = '*'
+            if i == 1 and j == 1:
+                dungeon[(i, j)] = '@'
 
-	valid = dfs(dungeon, (1,1), (size-2, size-2))
+            if i == size - 2 and j == size - 2:
+                dungeon[(i, j)] = '*'
 
-	if valid:
-		for i in xrange(size):
-			for j in xrange(size):
-				block = block + dungeon[(i,j)] + ' '
-			mazeStr.append(block)
-			block = ''
+    valid = dfs(dungeon, (1, 1), (size - 2, size - 2))
 
-		for i in mazeStr:
-			print i
-	else:
-		generateMaze()
+    if valid:
+        for i in xrange(size):
+            for j in xrange(size):
+                block = block + dungeon[(i, j)] + ' '
+            mazeStr.append(block)
+            block = ''
+
+        for i in mazeStr:
+            print i
+    else:
+        generateMaze()
+
 
 def getNeighbors(graph, node):
-	steps = []
-	x,y = node
-	for dx in [-1, 0, 1]:
-		for dy in [-1, 0, 1]:
-			next_node = (x + dx, y + dy)
-			if next_node in graph:
-				steps.append(next_node)
-	return steps
+    steps = []
+    x, y = node
+    for dx in [-1, 0, 1]:
+        for dy in [-1, 0, 1]:
+            next_node = (x + dx, y + dy)
+            if next_node in graph:
+                steps.append(next_node)
+    return steps
+
 
 def dfs(graph, start, goal):
-	visited, stack = [], [start]
-	path = []
-	while stack:
-		vertex = stack.pop()
+    visited, stack = [], [start]
+    path = []
+    while stack:
+        vertex = stack.pop()
 
-		if goal == vertex:
-			visited.append(vertex)
-			break
+        if goal == vertex:
+            visited.append(vertex)
+            break
 
-		neighbors = getNeighbors(graph, vertex)
-		for next_node in neighbors:
-			if next_node not in visited and graph[next_node] != 'W':
-				visited.append(vertex)
-				stack.append(next_node)
-				if vertex != start:
-					path.append(vertex)
+        neighbors = getNeighbors(graph, vertex)
+        for next_node in neighbors:
+            if next_node not in visited and graph[next_node] != 'W':
+                visited.append(vertex)
+                stack.append(next_node)
+                if vertex != start:
+                    path.append(vertex)
 
-	for i in path:
-		if i != start or i != goal:
-			graph[i] = "_"
+    for i in path:
+        if i != start or i != goal:
+            graph[i] = "_"
 
-	if goal in visited:
-		return True
-	else:
-		return False
+    if goal in visited:
+        return True
+    else:
+        return False
+
 
 generateMaze()
