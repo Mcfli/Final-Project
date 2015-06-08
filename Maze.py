@@ -53,9 +53,9 @@ def generateMaze():
                 dungeon[(i, j)] = 'D'
 
     for i in [-1, 0, 1]:
-    	for j in [-1, 0, 1]:
-    		roomA.append((room1 + i, room1 + j))
-    		roomB.append((room2 + i, room2 + j))
+        for j in [-1, 0, 1]:
+            roomA.append((room1 + i, room1 + j))
+            roomB.append((room2 + i, room2 + j))
 
     doorAX = random.randint(-1,1)
     doorAY = random.randint(-1,1)
