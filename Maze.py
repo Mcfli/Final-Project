@@ -1,7 +1,9 @@
 import random
+import math
+import string
 
 
-def generateMaze():
+def generateMaze(inputRoomA = [], inputRoom1 = 0, inputDoorPosA = (0, 0), inputFlag = False):
     dungeon = {}
     mustBeWall = False
     mazeStr = []
@@ -9,11 +11,15 @@ def generateMaze():
     spriteType = 0
     size = 20
     valid = False
-    roomA = []
+    roomA = inputRoomA
     roomB = []
-
-    room1 = random.randint(1, size - 4)
+    
+    room1 = inputRoom1
+    if room1 == 0: #if room1Coord not input
+        room1 = random.randint(1, size - 4)
     room2 = random.randint(1, size - 4)
+    while (abs(room2 - room1) < 3): #pretty sure this prevents the rooms from overlapping
+        room2 = random.randint(1, size - 4)
 
     for i in xrange(size):
         if i == 0:
@@ -52,17 +58,24 @@ def generateMaze():
             elif spriteType == 2:
                 dungeon[(i, j)] = 'D'
 
-    for i in [-1, 0, 1]:
-        for j in [-1, 0, 1]:
-            roomA.append((room1 + i, room1 + j))
-            roomB.append((room2 + i, room2 + j))
+    if not roomA: #if an initial room was not given to the generator
+        for i in [-1, 0, 1]:
+            for j in [-1, 0, 1]:
+                roomA.append((room1 + i, room1 + j))
+                roomB.append((room2 + i, room2 + j))
+    else: #initial room was given to generator as roomA
+        for i in [-1, 0, 1]:
+            for j in [-1, 0, 1]:
+                roomB.append((room2 + i, room2 + j))
 
     doorAX = random.randint(-1,1)
     doorAY = random.randint(-1,1)
     doorBX = random.randint(-1,1)
     doorBY = random.randint(-1,1)
 
-    doorPosA = (room1 + doorAX, room1 + doorAY)
+    doorPosA = inputDoorPosA
+    if doorPosA == (0, 0): #if doorPosA not input
+        doorPosA = (room1 + doorAX, room1 + doorAY)
     doorPosB = (room2 + doorBX, room2 + doorBY)
 
     for i in roomA:
@@ -93,8 +106,16 @@ def generateMaze():
 
         for i in mazeStr:
             print i
+        returnDict = {}
+        returnDict["roomA"] = roomA
+        returnDict["roomACoord"] = room1
+        returnDict["doorPosA"] = doorPosA
+        return returnDict
     else:
-        generateMaze()
+        if inputFlag:
+            return generateMaze(roomA, room1, doorPosA, True)
+        else:
+            return generateMaze([], 0, (0, 0), False)
 
 
 def getNeighbors(graph, node):
@@ -136,4 +157,10 @@ def dfs(graph, start, goal):
         return False
 
 
-generateMaze()
+state = generateMaze()
+while True:
+    print "Enter anything to generate a new, constrained maze."
+    inputString = raw_input("> ")
+    if inputString == "exit":
+        break;
+    generateMaze(state["roomA"], state["roomACoord"], state["doorPosA"], True)
