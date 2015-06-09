@@ -115,7 +115,9 @@ def generateMaze(inputRoomA = [], inputRoom1 = 0, inputDoorPosA = (0, 0), inputF
         if inputFlag:
             return generateMaze(roomA, room1, doorPosA, True)
         else:
-            return generateMaze([], 0, (0, 0), False)
+            #for some reason these default inputs need to be included
+            #else they get overwritten by the previous values
+            return generateMaze([], 0, (0, 0), False) 
 
 
 def getNeighbors(graph, node):
