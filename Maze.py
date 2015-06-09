@@ -26,10 +26,6 @@ def generateMaze(inputRoomA = [], inputRoom1 = 0, inputDoorPosA = (0, 0), inputF
             horzWall = True
         elif i == size - 1:
             horzWall = True
-        elif i in range(room1, room1 + 2):
-            roomWall = True
-        elif i in range(room2, room2 + 2):
-            roomWall = True
         else:
             horzWall = False
 
@@ -107,9 +103,9 @@ def generateMaze(inputRoomA = [], inputRoom1 = 0, inputDoorPosA = (0, 0), inputF
         for i in mazeStr:
             print i
         returnDict = {}
-        returnDict["roomA"] = roomA
-        returnDict["roomACoord"] = room1
-        returnDict["doorPosA"] = doorPosA
+        returnDict["roomB"] = roomB
+        returnDict["roomBCoord"] = room2
+        returnDict["doorPosB"] = doorPosB
         return returnDict
     else:
         if inputFlag:
@@ -165,4 +161,4 @@ while True:
     inputString = raw_input("> ")
     if inputString == "exit":
         break;
-    generateMaze(state["roomA"], state["roomACoord"], state["doorPosA"], True)
+    state = generateMaze(state["roomB"], state["roomBCoord"], state["doorPosB"], True)
