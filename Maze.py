@@ -161,4 +161,7 @@ while True:
     inputString = raw_input("> ")
     if inputString == "exit":
         break;
-    state = generateMaze(state["roomB"], state["roomBCoord"], state["doorPosB"], True)
+    elif inputString == "restart":
+        state = generateMaze([], 0, (0, 0), False);
+    else:
+        state = generateMaze(state["roomB"], state["roomBCoord"], state["doorPosB"], True)
