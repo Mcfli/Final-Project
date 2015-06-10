@@ -1,6 +1,8 @@
 import random
 import math
 import string
+import heapq
+from heapq import heappush, heappop
 
 
 def generateMaze(inputRoomA = [], inputRoom1 = 0, inputDoorPosA = (0, 0), inputFlag = False):
@@ -91,7 +93,7 @@ def generateMaze(inputRoomA = [], inputRoom1 = 0, inputDoorPosA = (0, 0), inputF
             dungeon[j] = 'W'
 
 
-    valid = dfs(dungeon, (room1, room1), (room2, room2))
+    valid = isPath(dungeon, (room1, room1), (room2, room2))
 
     if valid:
         for i in xrange(size):
@@ -122,17 +124,17 @@ def getNeighbors(graph, node):
     for dx in [-1, 0, 1]:
         for dy in [-1, 0, 1]:
             next_node = (x + dx, y + dy)
-            if next_node in graph:
+            if next_node in graph and not(dx == 0 and dy == 0) :
                 steps.append(next_node)
     return steps
 
 
-def dfs(graph, start, goal):
-    visited, stack = [], [start]
+def isPath(graph, start, goal):
+    visited, stack = [start], [(0,start)]
     path = []
+    parent = {}
     while stack:
-        vertex = stack.pop()
-
+        cost, vertex = heappop(stack)
         if goal == vertex:
             visited.append(vertex)
             break
@@ -140,14 +142,22 @@ def dfs(graph, start, goal):
         neighbors = getNeighbors(graph, vertex)
         for next_node in neighbors:
             if next_node not in visited and graph[next_node] != 'W':
-                visited.append(vertex)
-                stack.append(next_node)
+                visited.append(next_node)
+                parent[next_node] = vertex
+                heappush(stack, (cost + 1, next_node))
                 if vertex != start:
                     path.append(vertex)
 
-    for i in path:
-        if i != start and i != goal:
-            graph[i] = "_"
+    pathNode = goal
+    while pathNode in parent:
+        pathNode = parent[pathNode]
+        if pathNode != start:
+            graph[pathNode] = "_"
+        
+    
+    #for i in path:
+    #    if i != start and i != goal:
+    #        graph[i] = "_"
 
     if goal in visited:
         return True
@@ -159,7 +169,7 @@ state = generateMaze()
 while True:
     print "Enter anything to generate a new, constrained maze."
     inputString = raw_input("> ")
-    if inputString == "exit":
+    if inputString == "exit" or inputString == "quit":
         break;
     elif inputString == "restart":
         state = generateMaze([], 0, (0, 0), False);
